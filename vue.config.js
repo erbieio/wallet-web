@@ -1,6 +1,10 @@
 
 const isProduct = process.env.VUE_APP_NODE_ENV == 'production'  ? true : false
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const AutoImport = require('unplugin-auto-import/webpack')
+const Components = require('unplugin-vue-components/webpack')
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
+
 const webpack = require('webpack')
 console.warn('isProduct', isProduct,process.env.NODE_ENV)
 const needCdn = process.env.VUE_APP_NODE_ENV == 'production' || process.env.VUE_APP_NODE_ENV == 'test' ? true : false
@@ -122,6 +126,12 @@ module.exports = {
          parallel: false
       }))
     }
+    config.plugins.push(...[AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+    }),])
     config.optimization.splitChunks = {
       chunks: 'all',
       minSize: 20000,
@@ -166,13 +176,6 @@ module.exports = {
           priority: 20,
           test: /[\\/]node_modules[\\/]ethers[\\/]/
         },
-        web3: {
-          name(){
-            return 'module_5'
-          },
-          priority: 20,
-          test: /[\\/]node_modules[\\/]web3[\\/]/
-        },
         moment: {
           name(){
             return 'module_6'
@@ -213,7 +216,9 @@ module.exports = {
 
   },
   chainWebpack: config => {
-    config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    if(isProduct){
+      config.plugin('webpack-bundle-analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    }
     config.plugin("html").tap(args => {
       console.log(JSON.stringify(newCdns))
       args[0].jsCDN = newCdns

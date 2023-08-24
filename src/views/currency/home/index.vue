@@ -160,7 +160,6 @@ import {
 } from "@/store/modules/account";
 import ModifGasFee from "../components/modifGasFee.vue";
 import { utils } from "ethers";
-import { web3 } from "@/utils/web3";
 import { useDialog } from "@/plugins/dialog";
 import eventBus from "@/utils/bus";
 import { stopLoop } from '@/store/modules/txList';

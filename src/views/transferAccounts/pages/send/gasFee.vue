@@ -89,7 +89,7 @@ import BigNumber from "bignumber.js";
 import { computed, onMounted } from "@vue/runtime-core";
 import { useI18n } from "vue-i18n";
 import NavHeader from '@/components/navHeader/index.vue'
-import { web3 } from "@/utils/web3";
+import { ethers } from 'ethers';
 import {
   Icon,
   Toast,
@@ -194,7 +194,7 @@ export default {
       const { tokenContractAddress } = chooseToken.value;
       // Token transfer dynamic estimation gaslimit
       if (tokenContractAddress) {
-        const amountWei = web3.utils.toWei(amount.value.toString(), 'ether')
+        const amountWei = ethers.utils.formatUnits(amount.value.toString(), "ether")
         // Get contract token instance object
         const { contractWithSigner, contract } = await dispatch(
           "account/connectConstract",

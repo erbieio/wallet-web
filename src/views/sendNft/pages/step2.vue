@@ -125,7 +125,6 @@ import { useI18n } from "vue-i18n";
 import SendNftModal from "./../components/sendNftModal.vue";
 import ContactsList from "@/components//contactsList/contactsList.vue";
 import SendSuccessModal from "@/components/sendSuccessModal/index.vue";
-import { web3 } from "@/utils/web3";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import tradeConfirm from '@/plugins/tradeConfirmationsModal/tradeConfirm';
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";

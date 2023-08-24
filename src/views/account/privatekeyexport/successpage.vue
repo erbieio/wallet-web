@@ -196,7 +196,7 @@ export default {
           json: store.state.account.accountInfo.keyStore
         }
         //   Encrypt and store the time with a password according to the, transfer it to Step2, and then use PWD to restore the time at Step2
-        privateKey.value = decryptPrivateKey(params);
+        privateKey.value = await decryptPrivateKey(params);
         isError.value = false
         check.value = true
       } catch (err) {

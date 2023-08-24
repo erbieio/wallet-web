@@ -124,7 +124,6 @@ import BigNumber from "bignumber.js";
 import { computed, defineComponent, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import NavHeader from "@/components/navHeader/index.vue";
-import { web3 } from "@/utils/web3";
 import {
   Icon,
   Toast,

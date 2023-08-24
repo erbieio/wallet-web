@@ -140,7 +140,6 @@ import { getGasFee, getWallet } from "@/store/modules/account";
 import { toHex, useExchanges } from "@/hooks/useExchanges";
 import { encode } from "punycode";
 import BigNumber from "bignumber.js";
-import { web3 } from "@/utils/web3";
 
 export default {
   components: {
@@ -192,7 +191,7 @@ export default {
           const d = {type:11,version:"v0.0.1",fee_rate:100,name:baseName,url:""}
           const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
           
-          const data3 = web3.utils.fromUtf8(str);
+          const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
           const tx1 = {
             from: address,
             to: address,

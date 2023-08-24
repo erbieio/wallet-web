@@ -149,8 +149,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { addressMask, decimal } from "@/utils/filters";
 import { utils, ethers } from "ethers";
-import { toHex } from "@/utils/utils";
-import { web3 } from "@/utils/web3";
 
 import { useI18n } from "vue-i18n";
 export default {
@@ -190,7 +188,7 @@ export default {
       const wallet = await getWallet();
       const d2 = {type:1,nft_address: address, version:"v0.0.1"}
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
-      const data = web3.utils.fromUtf8(str);
+      const data =  ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx1 = {
         from: wallet.address,
         to: toAddress.value,

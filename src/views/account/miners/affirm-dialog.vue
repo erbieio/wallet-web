@@ -60,7 +60,6 @@ import { useStore } from 'vuex';
 import { getGasFee } from '@/store/modules/account';
 import { useSign } from "@/views/sign/hooks/sign";
 import { toHex } from '@/utils/utils';
-import { web3 } from "@/utils/web3";
 
 export default {
   components: {
@@ -100,7 +99,7 @@ export default {
       const d2 = {type:9,proxy_address:"",proxy_sign:"",version:"v0.0.1"}
       // Agent pledge
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx1 = {
         to: address,
         value: ethers.utils.parseEther(props.amount + ""),

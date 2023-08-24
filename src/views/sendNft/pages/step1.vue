@@ -90,7 +90,6 @@ import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { addressMask, decimal } from "@/utils/filters";
 import {toScan} from '@/utils/utils'
-import { web3 } from "@/utils/web3";
 
 export default {
   components: {

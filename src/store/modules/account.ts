@@ -28,7 +28,6 @@ import {
   TransactionRecord,
 } from "@/enum/network";
 // import { getEtherBalances } from "@mycrypto/eth-scan";
-import { useGasPrice } from "@/hooks/useGasPrice";
 import { setCookies, getCookies } from "@/utils/jsCookie";
 import router from "@/router";
 import { is_install } from "@/http/modules/common";
@@ -40,7 +39,6 @@ import { getContractAddress } from "@/http/modules/common";
 import localforage from 'localforage';
 import { useToast } from "@/plugins/toast";
 import Bignumber from 'bignumber.js'
-import { web3 } from "@/utils/web3";
 import { getConverAmount, getInput } from "./txList";
 import storeObj from '@/store/index'
 import { chainDataParse } from "@/enum/env";
@@ -429,6 +427,7 @@ export default {
     },
     // Update Account Information
     UPDATE_ACCOUNTINFO(state: State, value: AccountInfo) {
+      console.warn('UPDATE_ACCOUNTINFO', value)
       state.accountInfo = value;
     },
     // A list of transactions pushed to the current account
@@ -892,9 +891,9 @@ export default {
       } else {
         list = [account];
       }
-      dispatch("getProviderWallet");
       commit("UPDATE_ACCOUNTINFO", account);
-      dispatch("updateAccount");
+      dispatch("getProviderWallet");
+      // dispatch("updateAccount");
       commit("ADD_ACCOUNT", list);
       return Promise.resolve()
     },
@@ -1483,7 +1482,7 @@ export default {
                 }
                 const nftAccountInfo = await wallet.provider.send(
                   "eth_getAccountInfo",
-                  [nft_address, web3.utils.toHex((data1.blockNumber - 1).toString())]
+                  [nft_address, ethers.utils.hexValue(data1.blockNumber - 1)]
                 );
                 const { MergeLevel, MergeNumber } = nftAccountInfo.Nft
                 //  @ts-ignore

@@ -34,7 +34,6 @@ import { useStore } from "vuex";
 import { computed } from "vue";
 import { Image } from "vant";
 import { useRoute, useRouter } from "vue-router";
-import { web3 } from "@/utils/web3";
 import { useI18n } from "vue-i18n";
 export default defineComponent({
   name: "nft-card",
@@ -54,9 +53,6 @@ export default defineComponent({
     const layoutType = computed(() => store.state.system.layoutType);
     const router = useRouter();
     const datab: any = getCurrentInstance();
-    const nftname = (value: string) => {
-      web3.utils.hexToUtf8("0x" + value);
-    };
     async function getdata() {
       let info = datab.data;
     }
@@ -81,7 +77,6 @@ export default defineComponent({
       amountType,
       getdata,
       t,
-      nftname,
     };
   },
 });

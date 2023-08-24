@@ -711,7 +711,8 @@ export default {
     // 创建
     create: {
         createwallet: '创建钱包',
-        usemnemonic: '使用助记词导入'
+        usemnemonic: '使用助记词导入',
+        creating: '创建中...'
     },
     // 创建质押者成功
     createsuccessexchange: {

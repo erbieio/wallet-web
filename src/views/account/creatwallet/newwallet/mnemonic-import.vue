@@ -88,7 +88,7 @@ import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
 import { ref, Ref, computed, toRaw, SetupContext, onMounted } from 'vue'
 import { setCookies, getCookies, loginOut } from '@/utils/jsCookie'
 import { passwordExpires } from '@/enum/time'
-import { web3 } from '@/utils/web3'
+import {ethers} from 'ethers';
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { regPassword1 } from '@/enum/regexp'
@@ -159,10 +159,11 @@ export default {
                   password: password.value
                 }
                 // Storage password Generates a keystore file based on the password private key
-                const keyStore = encryptPrivateKey(params)
+                const keyStore = await encryptPrivateKey(params)
                 // Encrypt mnemonic storage according to password
-                const mnemonicData = encryptPrivateKey({
-                  privateKey: web3.utils.toHex(mnemonic.toString()),
+                
+                const mnemonicData = await encryptPrivateKey({
+                  privateKey: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(mnemonic.toString())),
                   password: password.value
                 })
                 // localforage.setItem('mnemonic', mnemonicData)

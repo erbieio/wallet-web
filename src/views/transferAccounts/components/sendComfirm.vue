@@ -198,11 +198,6 @@ export default defineComponent({
         eventBus.emit('sendComfirm')
         const receipt = await txData.wait()
         store.dispatch("account/waitTxQueueResponse")
-        // await store.dispatch("account/waitTxQueueResponse", {
-        //   callback(e: any) {
-        //     waitTime.value = e;
-        //   },
-        // });
         if (receipt.status) {
           $tradeConfirm.update({ status: "success", hash: txData.hash });
         } else {

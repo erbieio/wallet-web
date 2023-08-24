@@ -91,11 +91,6 @@ import { useRouter } from "vue-router";
 import { useCountDown } from "@vant/use";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { clone, getGasFee } from "@/store/modules/account";
-import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { useToast } from "@/plugins/toast";
-import eventBus from "@/utils/bus";
-import { encode, decode } from "js-base64";
-import { web3 } from '@/utils/web3'
 export default defineComponent({
   name: "sendNftModal",
   components: {
@@ -129,7 +124,7 @@ export default defineComponent({
       const { nft_address, to } = props.tx
       const d2 = {type:1,nft_address, version:"v0.0.1"}
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const myAddr = accountInfo.value.address
       const tx = {
         from: myAddr,

@@ -1,20 +1,17 @@
 // @ts-nocheck
 import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nextTick } from "vue";
-import { CreateWalletByJsonParams, CreateWalletByMnemonicParams } from '@/utils/ether'
-import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
-import { parseMnemonic } from '@/utils/web3'
+import { CreateWalletByJsonParams, CreateWalletByMnemonicParams, createWalletByMnemonic, getPath } from '@/utils/ether'
 import { setCookies, getCookies, hasLogin } from '@/utils/jsCookie'
 import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
 import eventBus from "@/utils/bus";
 import { useBroadCast } from '@/utils/broadCast'
 import i18n from "@/language/index";
 import store from '@/store/index'
-import { Toast } from "vant";
 import router from "@/router";
 import { Mnemonic } from "ethers/lib/utils";
 import { useExchanges } from "@/hooks/useExchanges";
 import localforage from "localforage";
+import { ethers } from "ethers";
 export const useToggleAccount = () => {
   const { commit, dispatch, state } = store
   const { handleUpdate } = useBroadCast()
@@ -56,7 +53,6 @@ export const useToggleAccount = () => {
       return wall
     } catch (err) {
       const errstr = String(err)
-      console.warn('change addr', errstr)
       if (errstr.indexOf('password') > -1) {
         router.replace({ name: 'withpassword' })
       }
@@ -66,76 +62,75 @@ export const useToggleAccount = () => {
     }
     showAccount.value = false
   };
-
+  const password: string = getCookies('password') || '';
   const keyStore = computed(() => store.state.mnemonic.keyStore)
+  const phrase: string = ethers.Wallet.fromEncryptedJsonSync(JSON.stringify(keyStore.value), password).mnemonic.phrase
+  // let phrase: string = ethers.Wallet.fromEncryptedJsonSync(JSON.stringify(keyStore.value), password).mnemonic.phrase
   const createWalletByPath = async (callBack: Function = () => { }) => {
     const { pathIndex, path }: any = { ...store.state.account.mnemonic }
-    const password: string = getCookies('password') || ''
-    // const mnemonicJson = await localforage.getItem('mnemonic')
-    let phrase: string = await parseMnemonic(password, keyStore.value)
-    let mnemonic: CreateWalletByMnemonicParams = { pathIndex, phrase, path }
-    let wallet = await dispatch("account/createWallet", mnemonic);
+    const newPathIndex = (Number(pathIndex) + 1)
+    let startTime = new Date().getTime()
+    console.warn('pathIndex', pathIndex)
+    console.log('startTime', startTime)
+    console.log('time 1 parse', new Date().getTime() - startTime)
+    let mnemonic: CreateWalletByMnemonicParams = { pathIndex: newPathIndex, phrase, path }
+    const wallet = ethers.Wallet.fromMnemonic(phrase, getPath(newPathIndex))
+    console.log('time 2 parse', new Date().getTime() - startTime)
+
     let { privateKey, address } = wallet
-    const hasAccount = await dispatch('account/hasAccountByAddress', address)
+    const accountList = toRaw(store.state.account.accountList);
+    const newAdd = address.toUpperCase();
+    const hasAccount = accountList.find(
+      (item: any) => item.address.toUpperCase() == newAdd
+    );
     if (hasAccount) {
-      const pidx = Number(pathIndex) + 1 + ''
       commit('account/UPDATE_MNEMONIC', {
-        pathIndex: pidx,
+        pathIndex: newPathIndex + 1,
         path
       })
-      // let time = setTimeout(() => {
-      //   createWalletByPath(callBack)
-      //   clearTimeout(time)
-      // })
       createWalletByPath(callBack)
     } else {
-      // let time = setTimeout(() => {
-      //   callBack(wallet, mnemonic)
-      //   clearTimeout(time)
-      // })
+      console.log('time 3 parse', new Date().getTime() - startTime)
+      commit('account/UPDATE_MNEMONIC', {
+        pathIndex: newPathIndex,
+        path
+      })
       callBack(wallet, mnemonic)
     }
   }
 
   const createAccount = () => {
     if(createLoading.value) {
-      return
+      return Promise.reject('loading ...')
     }
     createLoading.value = true
+    const password: string = getCookies('password') || ''
+    if (!password) {
+      router.replace({ name: 'withpassword' })
+      return Promise.reject('password is invalid ...')
+    }
     return new Promise((resolve, reject) => {
-    let time = setTimeout(() => {
-      const password: string = getCookies('password') || ''
-      if (!password) {
-        router.replace({ name: 'withpassword' })
-      }
-
-        createWalletByPath((wallet: any, mnemonic: Mnemonic) => {
-        
-          eventBus.emit('beforeChangeAccount')
-          const { privateKey, address } = wallet
-          const params: EncryptPrivateKeyParams = {
-            privateKey,
-            password
-          }
-          const keyStore = encryptPrivateKey(params)
-          dispatch('account/addAccount', { keyStore, mnemonic, address }).then(() => {
-            eventBus.emit('changeAccount', address)
-            resolve(wallet)
-            clearTimeout(time)
-            handleUpdate()
-            dispatch("account/getExchangeStatus")
-            nextTick(() => {
-              listDom.value.scrollTop = listDom.value.scrollHeight
-            })
-          }).finally(() => {
-            createLoading.value = false
+      createWalletByPath(async(wallet: any, mnemonic: Mnemonic) => {
+        eventBus.emit('beforeChangeAccount')
+        const { privateKey, address } = wallet
+        const params: EncryptPrivateKeyParams = {
+          privateKey,
+          password
+        }
+        const keyStore = await encryptPrivateKey(params)
+        dispatch('account/addAccount', { keyStore, mnemonic, address }).then(() => {
+          resolve(wallet)
+          eventBus.emit('changeAccount', address)
+          handleUpdate()
+          dispatch("account/getExchangeStatus")
+          nextTick(() => {
+            listDom.value?.scrollTop = listDom.value.scrollHeight
           })
+        }).finally(() => {
+          createLoading.value = false
         })
       })
-
     })
-
-
 
   }
   return {

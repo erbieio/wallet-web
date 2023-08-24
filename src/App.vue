@@ -21,7 +21,7 @@ import {
 } from "vue";
 import { useStore, mapActions } from "vuex";
 import { Button, Dialog, Loading, Toast } from "vant";
-import { utils } from "ethers";
+import { utils,ethers } from "ethers";
 
 import { useExchanges } from "@/hooks/useExchanges";
 import { useI18n } from "vue-i18n";
@@ -84,7 +84,7 @@ export default {
         clearTimeout(time);
       }, 300);
     };
-    onMounted(() => {
+    onMounted(async() => {
       initWallet()
       const { handleUpdate, broad } = useBroadCast();
       broad.onmessage = (e: any) => {
@@ -121,6 +121,8 @@ export default {
           clearTimeout(time);
         }, 5000);
       })();
+
+
     });
     return {
       t,

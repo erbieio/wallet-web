@@ -154,7 +154,6 @@ import { ethers } from "ethers";
 import BigNumber from "bignumber.js";
 import { getWallet } from "@/store/modules/account";
 import { useDialog } from "@/plugins/dialog";
-import { web3 } from "@/utils/web3";
 import eventBus from "@/utils/bus";
 import { utils } from 'ethers';
 import { stopLoop } from '@/store/modules/txList';

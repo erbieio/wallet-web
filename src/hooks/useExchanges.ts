@@ -6,8 +6,6 @@ import { ethers } from "ethers";
 import { ExchangeStatus, getWallet, TransactionReceipt, handleGetTranactionReceipt, TransactionTypes, clone, TransactionSendStatus } from "@/store/modules/account";
 import { hashMessage } from "@/utils/ether";
 import { useSign } from "@/views/sign/hooks/sign";
-import { web3 } from "@/utils/web3";
-
 import {
   createExchange,
   getSysParams,
@@ -219,7 +217,7 @@ export const useExchanges = () => {
       const rate_str: number = fee_rate ? new BigNumber(fee_rate).multipliedBy(10).toNumber() : 100
       const d = {type:11,version:"v0.0.1",fee_rate:rate_str,name,url:""}
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx1 = {
         from: address,
         to: address,
@@ -455,7 +453,7 @@ export const useExchanges = () => {
     const { address } = wallet;
     const d = {type:12,version:"v0.0.1"}
     const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-    const data3 = web3.utils.fromUtf8(str)
+    const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str))
     const tx1 = {
       from: address,
       to: address,
@@ -551,7 +549,7 @@ export const useExchanges = () => {
     // Add the pledge amount
     const d = {type:21,version:"v0.0.1"}
     const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-    const data3 = web3.utils.fromUtf8(str);
+    const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str))
     const tx1 = {
       from: address,
       to: address,
@@ -604,7 +602,7 @@ export const useExchanges = () => {
     const { address } = wallet;
     const d = {type:22,version:"v0.0.1"}
     const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-    const data3 = web3.utils.fromUtf8(str);
+    const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
     const tx1 = {
       from: address,
       to: address,

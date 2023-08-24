@@ -134,7 +134,7 @@ export default {
             privateKey,
             password
           }
-          const keyStore = encryptPrivateKey(params)
+          const keyStore = await encryptPrivateKey(params)
           await dispatch('account/addAccount', {
             mnemonic: { path: null, pathIndex: -1 },
             keyStore,

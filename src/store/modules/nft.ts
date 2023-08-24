@@ -2,8 +2,7 @@ import { getWallet, handleGetTranactionReceipt, TransactionReceipt } from "./acc
 import { toHex } from "@/utils/utils";
 import { Toast } from "vant";
 import { utils } from "ethers";
-import { web3 } from "@/utils/web3";
-
+import { ethers } from "ethers";
 import { TransactionTypes } from "./account";
 import { encode, decode } from 'js-base64';
 import store from '@/store/index'
@@ -38,7 +37,7 @@ export default {
       const { address } = wallet;
       const d = {type:6,version:"v0.0.1",nft_address}
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx1 = {
         from: address,
         to: address,
@@ -62,10 +61,10 @@ export default {
         type: 0,
         royalty: royalty,
         exchanger: "",
-        meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data))
+        meta_url: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(nft_data)))
       }
       const parstr = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(par)}`
-      const newdata = web3.utils.fromUtf8(parstr)
+      const newdata = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(parstr))
       const tx = {
         from: address,
         to: address,
@@ -85,7 +84,7 @@ export default {
       store.commit("account/PUSH_RECENTLIST", to);
       const d = {type:1,version:"v0.0.1",nft_address}
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-      const data3 =  web3.utils.fromUtf8(str);
+      const data3 =  ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx = {
         from: address,
         to,

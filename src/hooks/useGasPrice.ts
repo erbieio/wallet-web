@@ -1,4 +1,3 @@
-import { web3 } from "@/utils/web3";
 import { Ref, ref } from 'vue'
 import { ethers, utils } from "ethers";
 import { getWallet } from "@/store/modules/account";

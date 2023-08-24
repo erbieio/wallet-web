@@ -65,7 +65,7 @@
 import { defineComponent, SetupContext, Ref, ref, computed, toRaw } from 'vue'
 import { Skeleton, Icon } from 'vant'
 import { utils, BigNumber } from 'ethers'
-import { ethTractionPrice, getestimateGas, gasTotal, decimal } from '@/utils/filters'
+import { ethTractionPrice, gasTotal, decimal } from '@/utils/filters'
 import { Computed, useStore } from 'vuex'
 export default defineComponent({
   name: 'transactionConfirmComponent',

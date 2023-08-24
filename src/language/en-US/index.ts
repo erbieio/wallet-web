@@ -634,7 +634,9 @@ export default {
   },
   create: {
     createwallet: 'Create wallet',
-    usemnemonic: 'Use the secret recovery to import'
+    usemnemonic: 'Use the secret recovery to import',
+    creating: 'Creating...'
+
 
   },
   createsuccessexchange: {

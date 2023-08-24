@@ -327,7 +327,6 @@ import success from "@/views/account/exchange/success.vue";
 import {
   decimal,
 } from "@/utils/filters";
-import { web3 } from "@/utils/web3";
 import { useNetWork } from "@/components/navHeader/hooks/netWork";
 import SwitchNetwork from "@/components/switchNetwork/index.vue";
 import { ElTooltip, ElSlider } from "element-plus";
@@ -431,7 +430,7 @@ export default defineComponent({
           [address, "latest"]
         );
 
-        const blockn = web3.utils.toHex(blockNumber.value.toString());
+        const blockn = ethers.utils.hexValue(blockNumber.value);
         // Amount of the first pledge/total amount of the pledge *36 (start time of the second cancellation of the pledge calculation)+ Amount of the second pledge/total amount *72=54 = (time when the second cancellation of the pledge can be revoked)
         showCloseBtn.value = new BigNumber(blockNumber.value)
           .minus(ethAccountInfo.value.Worm.PledgedBlockNumber)
@@ -962,7 +961,7 @@ export default defineComponent({
         const tx = {
           to: accountInfo.value.address,
           value: ethers.utils.parseEther(sendAmount.toString()),
-          data: web3.utils.fromUtf8(`${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`),
+          data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(`${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`)),
         };
         const gasFee = await getGasFee(tx);
         reconveryDetail.value = {
@@ -991,7 +990,7 @@ export default defineComponent({
       const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
       const tx = {
         value: amount,
-        data: web3.utils.fromUtf8(str),
+        data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str)),
         to: accountInfo.value.address,
         transitionType: '26'
       }

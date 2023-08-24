@@ -57,10 +57,8 @@ import {
 } from "vant";
 import { ethers } from "ethers";
 import { Ref, ref } from "vue";
-import { web3 } from "@/utils/web3";
 import { useStore } from "vuex";
 import { encryptPrivateKey, EncryptPrivateKeyParams } from "@/utils/web3";
-import { createRandomWallet } from "@/utils/ether";
 import NavHeader from "@/components/navHeader/index.vue";
 import { setCookies, getCookies, loginOut } from "@/utils/jsCookie";
 
@@ -109,7 +107,7 @@ export default {
             password: password.value,
           };
           //Encrypt passwords and private keys into keystore/ JSON files for storage
-          const keyStore = encryptPrivateKey(params);
+          const keyStore = await encryptPrivateKey(params);
           await dispatch("account/addAccount", {
             keyStore,
             mnemonic: mnemonicParams,
@@ -117,8 +115,8 @@ export default {
           });
           commit("account/UPDATE_KEYSTORE", keyStore);
           commit("account/UPDATE_MNEMONIC", mnemonicParams);
-          const mnemonicData = encryptPrivateKey({
-            privateKey: web3.utils.toHex(phrase),
+          const mnemonicData = await encryptPrivateKey({
+            privateKey: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(phrase)),
             password: password.value,
           });
           commit('mnemonic/UPDATE_MNEMONIC',mnemonicData)

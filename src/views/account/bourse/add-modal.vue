@@ -185,7 +185,6 @@ import Tip from "@/components/tip/index.vue";
 import { getGasFee, getWallet } from "@/store/modules/account";
 import { useStore } from "vuex";
 import { ethers } from "ethers";
-import { web3 } from "@/utils/web3";
 
 export default defineComponent({
   name: "add-modal",
@@ -235,7 +234,7 @@ export default defineComponent({
           const { address } = state.account.accountInfo;
           const d = {type:21,version:"v0.0.1"}
           const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
-          const data3 = web3.utils.fromUtf8(str);
+          const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
           const tx1 = {
             from: address,
             to: address,
@@ -270,7 +269,7 @@ export default defineComponent({
       const addressInfo = await getAccountAddr(wallet.address)
       const {rewardSNFTCount} = addressInfo
       historyProfit.value = new BigNumber(rewardSNFTCount).multipliedBy(t0).toString()
-      const blockn = web3.utils.toHex(blockNumber.toString());
+      const blockn = ethers.utils.hexValue(blockNumber);
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)
       let total = new BigNumber(0);

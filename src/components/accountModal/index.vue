@@ -155,13 +155,17 @@ export default defineComponent({
         show.value = false;
       });
     };
-    const handleCreateAccount = async () => {
-      Toast.loading({
-        message: t("userexchange.loading"),
-        forbidClick: true,
-        loadingType: "spinner",
-      });
-      createAccount();
+    const cloading = ref(false)
+    const handleCreateAccount = () => {
+      if (cloading.value) {
+        return
+      }
+      cloading.value = true
+      nextTick(() => {
+        createAccount().finally(() => {
+          cloading.value = false
+        });
+      })
     };
     watch(
       () => props.modelValue,
@@ -214,6 +218,7 @@ export default defineComponent({
       handleAccount,
       handleSelect,
       listDom,
+      cloading,
       createLoading,
       accountLoading,
       clickAccountIdx,

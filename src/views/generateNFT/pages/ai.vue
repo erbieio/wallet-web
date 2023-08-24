@@ -153,7 +153,6 @@ import CreateModal from "../components/createModal.vue";
 import { getWallet } from "@/store/modules/account";
 import { useStore } from "vuex";
 import { ethers } from "ethers";
-import { web3 } from "@/utils/web3";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
 import { useToast } from "@/plugins/toast";
@@ -225,11 +224,11 @@ const handleGetGas = async () => {
     type: 0,
     royalty: Number(royalty.value) * 100,
     exchanger: "",
-    meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data)),
+    meta_url: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(nft_data))),
   };
   const parstr = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(par)}`;
   
-  const newdata = web3.utils.fromUtf8(parstr);
+  const newdata = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(parstr));
   const tx = {
     to: myAddr,
     from: myAddr,
@@ -307,7 +306,7 @@ const aiCreate = async () => {
   const txData = await dispatch("account/transaction", {
     value: sendVal.value,
     to: sendAddr.value,
-    data: web3.utils.fromUtf8(JSON.stringify(sendData))
+    data:ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sendData)))
   });
   $tradeConfirm.update({ status: "approve" });
   const txReceipt = await txData.wait();
@@ -336,10 +335,10 @@ const handleSendCreate = async (nft_data = {}, call = (v: any) => {}) => {
     type: 0,
     royalty: Number(royalty.value) * 100,
     exchanger: "",
-    meta_url: web3.utils.fromUtf8(JSON.stringify(nft_data)),
+    meta_url: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(nft_data))),
   };
   const parstr = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(par)}`;
-  const newdata = web3.utils.fromUtf8(parstr);
+  const newdata = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(parstr));
   const tx = {
     to: myAddr,
     from: myAddr,
@@ -437,7 +436,7 @@ const handleConfirm = async () => {
       const txData = await dispatch("account/transaction", {
         value: sendVal.value,
         to: sendAddr.value,
-        data: web3.utils.fromUtf8(JSON.stringify(sendData))
+        data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sendData)))
       });
       $tradeConfirm.update({ status: "approve" });
       const txReceipt = await txData.wait();

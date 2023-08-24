@@ -91,11 +91,7 @@ import { useRouter } from "vue-router";
 import { useCountDown } from "@vant/use";
 import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { clone, getGasFee } from "@/store/modules/account";
-import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
-import { useToast } from "@/plugins/toast";
-import eventBus from "@/utils/bus";
 import { encode, decode } from "js-base64";
-import { web3 } from '@/utils/web3'
 export default defineComponent({
   components: {
     [Dialog.Component.name]: Dialog.Component,
@@ -129,7 +125,7 @@ export default defineComponent({
       const newTx = { ...props.tx, category: props.tx.category.value }
 
       const str = `${store.getters['account/chainParsePrefix']}:{"version": "0.0.1","type":0,"royalty":${props.tx.royalty},"exchanger":"","meta_url":"${encode(JSON.stringify(newTx))}"}`;
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 =  ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const myAddr = accountInfo.value.address
       const tx = {
         from: myAddr,

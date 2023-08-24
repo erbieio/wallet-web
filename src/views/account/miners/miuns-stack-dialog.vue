@@ -88,10 +88,6 @@ import {
   TransactionTypes,
 } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
-import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
-import { useRouter } from "vue-router";
-import { web3 } from "@/utils/web3";
-import { clone } from 'pouchdb-utils';
 import { getAccountAddr } from '@/http/modules/common';
 
 export default {
@@ -141,8 +137,7 @@ export default {
       async (n) => {
         if (n) {
           const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
-
-          const data3 = web3.utils.fromUtf8(str);
+          const data3 =  ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
           const tx1 = {
             to: props.to,
             value: ethers.utils.parseEther(props.minusNumber + ""),
@@ -176,7 +171,7 @@ export default {
       const addressInfo = await getAccountAddr(wallet.address)
       const { rewardCoinCount, rewardSNFTCount } = addressInfo
       // minusNumber + If the pledged amount is greater than or equal to 70,000, use erb reward, and less than 70,000, use snft reward
-      const blockn = web3.utils.toHex(blockNumber.toString());
+      const blockn = ethers.utils.hexValue(blockNumber)
       if (isValidator) {
         historyProfit.value = new BigNumber(rewardCoinCount).multipliedBy(0.16).toString()
         const { Validators } = await wallet.provider.send("eth_getValidator", [blockn]);

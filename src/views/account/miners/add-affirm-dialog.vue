@@ -84,7 +84,6 @@ import { useStore } from "vuex";
 import { toHex } from "@/utils/utils";
 import { getWallet, getGasFee } from "@/store/modules/account";
 import { BigNumber } from "bignumber.js";
-import { web3 } from "@/utils/web3";
 import { getAccount } from "@/http/modules/nft";
 import { getAccountAddr } from '@/http/modules/common';
 
@@ -133,7 +132,7 @@ export default {
       async (n) => {
         if (n) {
           const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify({ type: 9, proxy_address: accountInfo.value.address, "fee_rate": 1000, "name": "", "url": "", "version": "0.0.1" })}`;
-          const data3 = web3.utils.fromUtf8(str)
+          const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
           const tx1 = {
             to: props.to,
             value: ethers.utils.parseEther(props.addNumber + ""),
@@ -167,7 +166,7 @@ export default {
       const addressInfo = await getAccountAddr(wallet.address)
       const { rewardCoinCount, rewardSNFTCount } = addressInfo
       // addNumber + If the pledged amount is greater than or equal to 70,000, use erb reward, and less than 70,000, use snft reward
-      const blockn = web3.utils.toHex(blockNumber.toString());
+      const blockn = ethers.utils.hexValue(blockNumber);
       if (isValidator) {
         historyProfit.value = new BigNumber(rewardCoinCount).multipliedBy(0.16).plus(new BigNumber(rewardSNFTCount).multipliedBy(average)).toString()
         const { Validators } = await wallet.provider.send("eth_getValidator", [blockn]);

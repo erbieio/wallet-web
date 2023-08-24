@@ -77,7 +77,6 @@
             :loading="loading"
             round
             block
-            :disabled="btnDisabled"
             type="primary"
             native-type="submit"
             >{{ t("createAccountpage.createAccount") }}</van-button
@@ -114,11 +113,11 @@ import {
   Checkbox,
   CheckboxGroup,
 } from "vant";
-import { encryptPrivateKey, EncryptPrivateKeyParams } from "@/utils/web3";
+import { encryptPrivateKey, EncryptPrivateKeyParams, encryptMnemonic } from "@/utils/web3";
 import { ref, Ref, computed, toRaw, SetupContext, onMounted } from "vue";
 import { setCookies, getCookies, loginOut } from "@/utils/jsCookie";
-import { web3 } from "@/utils/web3";
 import { useRouter } from "vue-router";
+import { ethers } from "ethers";
 import { useI18n } from "vue-i18n";
 import { regPassword1 } from "@/enum/regexp";
 
@@ -161,11 +160,12 @@ export default {
             password.value,
           );
           const wallet = await dispatch("account/createRandomWallet");
+          debugger
           const { mnemonic, privateKey, address } = wallet;
           const { phrase, path } = mnemonic;
           const mnemonicParams: any = {
             phrase,
-            pathIndex: "0",
+            pathIndex: 0,
             path,
           };
 
@@ -173,10 +173,8 @@ export default {
             privateKey,
             password: password.value,
           };
-          ;
           // Encrypt the password and private key into a keystore/ JSON file for storage
-          const keyStore = encryptPrivateKey(params);
-          ;
+          const keyStore = await encryptPrivateKey(params);
           await dispatch("account/addAccount", {
             keyStore,
             mnemonic: mnemonicParams,
@@ -184,12 +182,8 @@ export default {
           });
           commit("account/UPDATE_KEYSTORE", keyStore);
           commit("account/UPDATE_MNEMONIC", mnemonicParams);
-          const mnemonicData = encryptPrivateKey({
-            privateKey: web3.utils.toHex(phrase),
-            password: password.value,
-          });
-          // await localforage.setItem("mnemonic", mnemonicData);
-          commit('mnemonic/UPDATE_MNEMONIC',mnemonicData)
+          const mnemonicStore = await wallet.encrypt(password.value)
+          commit('mnemonic/UPDATE_MNEMONIC', JSON.parse(mnemonicStore));
           router.replace({
             name: "create-step",
           });

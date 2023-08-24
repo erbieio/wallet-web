@@ -61,7 +61,6 @@ import {
 } from "@/http/modules/nft";
 import eventBus from "@/utils/bus";
 import NoData from "@/components/noData/index.vue";
-import { web3 } from "@/utils/web3";
 import {
   computed,
   ref,
@@ -73,6 +72,7 @@ import {
   onUnmounted,
   onMounted
 } from "vue";
+import {ethers} from 'ethers';
 import { useStore } from "vuex";
 import { List, Toast, Button, PullRefresh, Sticky, Icon, Popover, Loading } from "vant";
 import { useI18n } from "vue-i18n";
@@ -161,7 +161,7 @@ export default defineComponent({
               // 1: normal  value = 0
               // 2: ai drawed value = 1
               // 3: ai not draw value = 2
-              const pa = JSON.parse(web3.utils.toUtf8(item.meta_url));
+              const pa = JSON.parse(ethers.utils.toUtf8String(item.meta_url));
               console.warn('===', pa, darwedList)
               if (darwedList.includes(item.address.toLowerCase())) {
                 item.category = 1;

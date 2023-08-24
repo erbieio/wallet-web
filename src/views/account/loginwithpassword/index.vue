@@ -96,7 +96,6 @@ import {
   watch,
 } from "@vue/runtime-core";
 import { useStore } from "vuex";
-import { encryptPrivateKey, EncryptPrivateKeyParams } from "@/utils/web3";
 import NavHeader from "@/components/navHeader/index.vue";
 import { setCookies, getCookies } from "@/utils/jsCookie";
 import WormTransition from '@/components/wromTransition/index.vue'

@@ -182,7 +182,6 @@ import Tip from "@/components/tip/index.vue";
 import { getGasFee, getWallet } from "@/store/modules/account";
 
 import { ethers } from "ethers";
-import { web3 } from "@/utils/web3";
 
 export default defineComponent({
   name: "minus-modal",
@@ -239,7 +238,7 @@ export default defineComponent({
             ? `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d1)}`
             : `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
           const realAm = bigAmount.gte(props.fee) ? 0 : props.amount;
-          const data3 = web3.utils.fromUtf8(str);
+          const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
           const tx1 = {
             from: address,
             to: address,
@@ -275,7 +274,7 @@ export default defineComponent({
       const wallet = await getWallet();
       const blockNumber = await wallet.provider.getBlockNumber();
 
-      const blockn = web3.utils.toHex(blockNumber.toString());
+      const blockn = ethers.utils.hexValue(blockNumber);
       const data = await wallet.provider.send("eth_getValidator", [blockn]);
       // const data2 = await getAccount(accountInfo.value.address)
       let total = new BigNumber(0);

@@ -144,7 +144,6 @@ import { watch, onMounted } from "vue";
 import eventBus from "@/utils/bus";
 import { onUnmounted } from "vue";
 import { useToast } from "@/plugins/toast";
-import { web3 } from "@/utils/web3";
 import { ethers } from "ethers";
 import { getRandomIcon } from "@/utils";
 import { getUsersCoefficient } from '@/http/modules/staker'
@@ -313,7 +312,7 @@ const handleShowReconveryModal = async () => {
         const tx = {
             to: accountInfo.value.address,
             value: ethers.utils.parseEther(sendAmount.toString()),
-            data: web3.utils.fromUtf8(`${store.getters['account/chainParsePrefix']}:${JSON.stringify({ type: 26, version: "v0.0.1" })}`),
+            data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(`${store.getters['account/chainParsePrefix']}:${JSON.stringify({ type: 26, version: "v0.0.1" })}`)),
         };
         const gasFee = await getGasFee(tx);
         reconveryDetail.value = {
@@ -377,7 +376,7 @@ const minusConfirm = async () => {
     })
     try {
         const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify({ type: 10, version: "0.0.1" })}`;
-        const data3 = web3.utils.fromUtf8(str)
+        const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str))
         const tx1 = {
             to: toAddr.value,
             value: addNumber.value,
@@ -408,7 +407,7 @@ const reconveryConfirm = async () => {
     const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify({ "type": 26, "version": "v0.0.1" })}`;
     const tx = {
         value: amount,
-        data: web3.utils.fromUtf8(str),
+        data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str)),
         to: accountInfo.value.address,
     }
 
@@ -481,7 +480,7 @@ const addStakeConfirm = async () => {
         const { fee_rate } = store.state.configuration.setting.staker
 
         const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify({ type: 9, proxy_address: accountInfo.value.address, fee_rate: fee_rate || 1000, name: "Staker", url: "", version: "v0.0.1" })}`;
-        const data3 = web3.utils.fromUtf8(str)
+        const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str))
         const tx1 = {
             to: toAddr.value,
             value: addNumber.value,

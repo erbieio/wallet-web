@@ -184,7 +184,6 @@ import BigNumber from "bignumber.js";
 import AccountModal from "@/components/accountModal/index.vue";
 import { useI18n } from "vue-i18n";
 import SendConfirm from "@/views/transferAccounts/components/sendComfirm.vue";
-import { web3 } from "@/utils/web3";
 import { ethers } from "ethers";
 import eventBus from "@/utils/bus";
 import { useToast } from "@/plugins/toast";

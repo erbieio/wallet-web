@@ -125,7 +125,6 @@ import {
   TransactionTypes,
   clone,
 } from "@/store/modules/account";
-import { web3 } from "@/utils/web3";
 
 export default {
   components: {
@@ -177,7 +176,7 @@ export default {
         const d2 = {type:10,version:"v0.0.1"}
 
         const str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d2)}`;
-        const data3 = web3.utils.fromUtf8(str);
+        const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
         const tx1 = {
           to: "0x7fBC8ad616177c6519228FCa4a7D9EC7d1804900",
           value: props.formatValueNumber + "",

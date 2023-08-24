@@ -107,7 +107,7 @@ export default {
     const pwdErr = ref(false)
     const {$wtoast} = useToast()
     const privateKey = ref()
-    const handleCheck = () => {
+    const handleCheck = async() => {
       pwdErr.value = false
       if (!password.value) {
         $wtoast.fail(t('sign.password'));
@@ -124,7 +124,7 @@ export default {
           json: keyStore,
         };
         
-        privateKey.value = decryptPrivateKey(data);
+        privateKey.value = await decryptPrivateKey(data);
         checkPass.value = true
 
       } catch (err) {

@@ -1,7 +1,6 @@
 import { AccountInfo } from "@/store/modules/account"
 import moment from 'moment'
 import { utils } from 'ethers'
-import { web3 } from "@/utils/web3";
 import BigNumber from "bignumber.js";
 import { useI18n } from 'vue-i18n'
 import { useStore } from "vuex";
@@ -135,10 +134,7 @@ type EstimateGasParams = {
   to: string
   data: string
 }
-//Method to estimate the GAS usage of a transaction by performing a message call.
-export const getestimateGas = (params: EstimateGasParams) => {
-  return web3.eth.estimateGas(params)
-}
+
 // Calculate total expenses
 export const gasTotal = (price: string = '0', deposit: string = '0') => {
   if (!deposit || !price) return ''

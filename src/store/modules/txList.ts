@@ -5,8 +5,7 @@ import store from '../index'
 import { getWallet } from './account'
 import localforage from 'localforage'
 import eventBus from '@/utils/bus'
-import { utils } from 'ethers'
-import { web3 } from '@/utils/web3'
+import { ethers, utils } from 'ethers'
 import BigNumber from 'bignumber.js'
 import { guid } from '@/utils'
 
@@ -310,7 +309,7 @@ export function getInput(input) {
     if (input && input != '0x') {
         try {
 
-            const wormStr = web3.utils.toAscii(input)
+            const wormStr = ethers.utils.toAscii(input)
             const [nullstr, jsonstr] = wormStr.split(`${prefix}:`)
             let jsonData = null
             const txType = wormStr.startsWith(`${prefix}:`)
@@ -389,7 +388,7 @@ export async function getConverAmount(wallet, data) {
                 }
                 const nftAccountInfo = await wallet.provider.send(
                     "eth_getAccountInfo",
-                    [nft_address, web3.utils.toHex((blockNumber - 1).toString())]
+                    [nft_address, ethers.utils.hexValue(blockNumber - 1)]
                 );
                 const { MergeLevel, MergeNumber } = nftAccountInfo.Nft
                 //  @ts-ignore

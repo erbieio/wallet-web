@@ -146,7 +146,6 @@ import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal";
 import { TradeStatus } from "@/plugins/tradeConfirmationsModal/tradeConfirm";
 import { VUE_APP_EXCHANGES_URL, VUE_APP_OFFICIAL_EXCHANGE } from "@/enum/env";
 import SnftModal from "./snftModal.vue";
-import { web3 } from "@/utils/web3";
 import { ethers } from "ethers";
 import Tip from '@/components/tip/index.vue'
 import router from "@/router";
@@ -348,33 +347,33 @@ export default defineComponent({
               item.tagName = "L3";
               item.tagIdx = 3;
               str = str + "000";
-              item.pidx = web3.utils.hexToNumber(hexp)
+              item.pidx = parseInt(hexp,16)
               break;
             case 40:
               item.tag = "C";
               str = str + "00";
               item.tagName = "L2";
               item.tagIdx = 2;
-              item.pidx = web3.utils.hexToNumber(hexp)
-              item.cidx = web3.utils.hexToNumber(hexc) + 1
+              item.pidx = parseInt(hexp,16)
+              item.cidx = parseInt(hexc,16) + 1
               break;
             case 41:
               item.tag = "N";
               item.tagName = "L1";
               item.tagIdx = 1;
               str = str + "0";
-              item.pidx = web3.utils.hexToNumber(hexp)
-              item.cidx = web3.utils.hexToNumber(hexc) + 1
-              item.nidx = web3.utils.hexToNumber(hexn) + 1
+              item.pidx = parseInt(hexp,16)
+              item.cidx = parseInt(hexc,16) + 1
+              item.nidx = parseInt(hexn,16) + 1
               break;
             case 42:
               item.tag = "F";
               item.tagName = "L0";
               item.tagIdx = 0;
-              item.pidx = web3.utils.hexToNumber(hexp)
-              item.cidx = web3.utils.hexToNumber(hexc) + 1
-              item.nidx = web3.utils.hexToNumber(hexn) + 1
-              item.fidx = web3.utils.hexToNumber(hexf) + 1
+              item.pidx = parseInt(hexp,16)
+              item.cidx = parseInt(hexc,16) + 1
+              item.nidx = parseInt(hexn,16) + 1
+              item.fidx = parseInt(hexf,16) + 1
               break;
           }
           item.showPop = false
@@ -602,7 +601,7 @@ export default defineComponent({
                 break;
             }
 
-            const data3 = web3.utils.fromUtf8(str)
+            const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
             const tx1 = {
               from: accountInfo.value.address,
               to: accountInfo.value.address,
@@ -673,7 +672,7 @@ export default defineComponent({
         wallet = await getWallet()
       }
       const blockNumber = await wallet.provider.getBlockNumber();
-      const blockn = web3.utils.toHex(blockNumber.toString());
+      const blockn = ethers.utils.hexValue(blockNumber);
       const data = await wallet.provider.send('eth_getValidator', [blockn])
       // const data2 = await getAccount(accountInfo.value.address)
       let total = new BigNumber(0)
@@ -698,7 +697,7 @@ export default defineComponent({
           str = `${store.getters['account/chainParsePrefix']}:${JSON.stringify(d)}`;
           break;
       }
-      const data3 = web3.utils.fromUtf8(str);
+      const data3 = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(str));
       const tx1 = {
         to: accountInfo.value.address,
         value: ethers.utils.parseEther(0 + ""),
