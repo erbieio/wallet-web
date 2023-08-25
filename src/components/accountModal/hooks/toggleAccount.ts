@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nextTick } from "vue";
+import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nextTick, onMounted } from "vue";
 import { CreateWalletByJsonParams, CreateWalletByMnemonicParams, createWalletByMnemonic, getPath } from '@/utils/ether'
 import { setCookies, getCookies, hasLogin } from '@/utils/jsCookie'
 import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
@@ -64,7 +64,13 @@ export const useToggleAccount = () => {
   };
   const password: string = getCookies('password') || '';
   const keyStore = computed(() => store.state.mnemonic.keyStore)
-  const phrase: string = ethers.Wallet.fromEncryptedJsonSync(JSON.stringify(keyStore.value), password).mnemonic.phrase
+  
+  let phrase: string = ''
+  onMounted(async() => {
+    debugger
+    phrase = await ethers.Wallet.fromEncryptedJson(JSON.stringify(keyStore.value), password)
+    debugger
+  })
   // let phrase: string = ethers.Wallet.fromEncryptedJsonSync(JSON.stringify(keyStore.value), password).mnemonic.phrase
   const createWalletByPath = async (callBack: Function = () => { }) => {
     const { pathIndex, path }: any = { ...store.state.account.mnemonic }

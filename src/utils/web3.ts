@@ -39,15 +39,6 @@ export const encryptMnemonic = async (params: EncryptMnemonicParams) => {
         const { mnemonic, password, wallet } = params
         const mneWallet = ethers.Wallet.fromMnemonic(mnemonic, "m/44'/60'/0'/0/0")
         const mnemonicData = await mneWallet.encrypt(password)
-        debugger
-        // HDNode encrypt
-        // const node = Wallet.encrypt
-   
-        // debugger
-        // const mnemonicData = await encryptPrivateKey({
-        //     privateKey: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(mnemonic)),
-        //     password,
-        // })
         store.commit('mnemonic/UPDATE_MNEMONIC', mnemonicData)
         } catch (err) {
         console.error(err)
