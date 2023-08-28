@@ -3,6 +3,7 @@ import { SetupContext, Ref, ref, reactive, defineComponent, computed, toRaw, nex
 import { CreateWalletByJsonParams, CreateWalletByMnemonicParams, createWalletByMnemonic, getPath } from '@/utils/ether'
 import { setCookies, getCookies, hasLogin } from '@/utils/jsCookie'
 import { encryptPrivateKey, EncryptPrivateKeyParams } from '@/utils/web3'
+// import { decrypt } from 'web3'
 import eventBus from "@/utils/bus";
 import { useBroadCast } from '@/utils/broadCast'
 import i18n from "@/language/index";
