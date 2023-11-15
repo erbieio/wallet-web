@@ -8,7 +8,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Icon, Toast, Button, Sticky, Field } from "vant";
-import NavHeader from "@/components/navHeader/index.vue";
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n'
 export default {
@@ -16,7 +15,6 @@ export default {
   components: {
     [Sticky.name]: Sticky,
     [Icon.name]: Icon,
-    NavHeader,
   },
   setup() {
     const route = useRoute()

@@ -30,7 +30,7 @@ export const copy = async (v: string) => {
 
 //Gets the query parameter for the URL
 export const getQuery = () => {
-  const hash = location.hash
+  const hash = location.href
   const strarr = hash.split('?')
   const str = strarr.length ? strarr[1] : null
   if (!str) {

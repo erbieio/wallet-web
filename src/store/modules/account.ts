@@ -1226,6 +1226,37 @@ export default {
         return Promise.reject(err)
       }
     },
+    // contract trading
+    async contractTransaction({state,commit, dispatch}: any, {contractAddr, abi, functionName, args}: ContractTransaction){
+      const wallet = await getWallet();
+      const contract = new ethers.Contract(
+          contractAddr,
+          abi,
+          wallet.provider
+      );
+      const contractWithSigner = contract.connect(wallet);
+      const data = await contractWithSigner.functions[functionName](...args)
+      const { from, gasLimit, gasPrice, hash, nonce, type, value: newVal, to: toAddr } = data;
+      const { currentNetwork } = state
+      await PUSH_TXQUEUE({
+        hash,
+        from,
+        gasLimit: utils.formatUnits(gasLimit, 'wei'),
+        gasPrice,
+        nonce,
+        to: toAddr,
+        type,
+        value: newVal,
+        transitionType: null,
+        txType: TransactionTypes.default,
+        network: clone(currentNetwork),
+        data: '',
+        sendStatus: TransactionSendStatus.pendding,
+        sendData: clone(data),
+      })
+      data.wallet = wallet
+      return data
+    },
     //Load the wallet by address and password
     async connectWalletByPwdAddress(
       { state, commit, dispatch }: any,
@@ -1326,8 +1357,6 @@ export default {
     ) {
       try {
         const wallet = await getWallet();
-        const { URL } = state.currentNetwork;
-        // let provider = ethers.getDefaultProvider(URL);
         const contract = new ethers.Contract(
           tokenContractAddress,
           erc20Abi,
@@ -1940,4 +1969,12 @@ export const UPDATE_TRANSACTION = async (da: any) => {
   } catch (err) {
     console.error(err)
   }
+}
+
+
+export interface ContractTransaction {
+  contractAddr: string,
+  functionName: string,
+  abi: string,
+  args: Array<any>
 }

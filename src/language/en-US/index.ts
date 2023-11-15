@@ -309,6 +309,7 @@ export default {
     help: 'Help Center',
     snftCreator:"SNFT Creator",
     generateNFT:"AI Generate NFT",
+    crossChainTrading:"Cross-chain trading"
 
 
   },

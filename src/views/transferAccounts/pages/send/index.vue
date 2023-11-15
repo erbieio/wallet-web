@@ -177,15 +177,12 @@ import AccountList from "@/views/account/components/accountList/index.vue";
 import { AccountInfo, getWallet } from "@/store/modules/account";
 import { addressMask, decimal, toUsd } from "@/utils/filters";
 import actionSheet from "@/views/account/wallet/action-sheet.vue";
-import { useTradeConfirm } from "@/plugins/tradeConfirmationsModal/index";
 import { utils } from "ethers";
 import { getRandomIcon } from "@/utils";
 import BigNumber from "bignumber.js";
 import AccountModal from "@/components/accountModal/index.vue";
 import { useI18n } from "vue-i18n";
 import SendConfirm from "@/views/transferAccounts/components/sendComfirm.vue";
-import { web3 } from "@/utils/web3";
-import { ethers } from "ethers";
 import eventBus from "@/utils/bus";
 import { useToast } from "@/plugins/toast";
 

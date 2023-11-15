@@ -397,6 +397,7 @@ export default {
         help: '使用帮助',
         snftCreator:"S-NFT创造者",
         generateNFT:"AI生成NFT",
+        crossChainTrading:"跨链交易"
 
 
 

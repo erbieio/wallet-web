@@ -19,7 +19,7 @@ import mnemonic from '@/views/mnemonic/route'
 import createNft from '@/views/createNft/route'
 import sendNft from '@/views/sendNft/route'
 import generateNFT from '@/views/generateNFT/route'
-
+import crossChainTradingSend from '@/views/crossChain/route'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -283,6 +283,7 @@ const routes: Array<RouteRecordRaw> = [
 
         ]
       },
+      crossChainTradingSend,
       {
         path: '/miners-pledge',
         name: 'minersPledge',

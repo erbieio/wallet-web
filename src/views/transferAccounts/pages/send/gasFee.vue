@@ -275,7 +275,7 @@ export default {
     });
 
     const back = () => {
-      router.replace({ name: "send" })
+      router.replace({ name: backUrl || "send" })
     }
     return {
       gasPriceModal,

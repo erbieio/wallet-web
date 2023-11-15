@@ -163,7 +163,6 @@
               }}</span>
             </div>
 
-
             <div class="setting-btn clickActive flex center-v" @click="tobrowser">
               <i class="iconfont icon-network"></i>
               <span>{{ t("sidebar.browser") }}</span>
@@ -181,6 +180,11 @@
             <div class="setting-btn clickActive flex center-v" @click="toHelp">
               <i class="iconfont icon-bangzhuzhongxin31"></i>
               <span>{{ t("sidebar.help") }}</span>
+            </div>
+
+            <div class="setting-btn clickActive flex center-v" @click="routerTo('crossChain')">
+              <i class="iconfont icon-trading1"></i>
+              <span>{{ t("sidebar.crossChainTrading") }}</span>
             </div>
 
             <div class="setting-btn clickActive flex center-v" @click="routerTo('settings')">

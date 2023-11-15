@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "types": [
       "webpack-env"
     ],
@@ -32,8 +33,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
-, "src/utils/cryptoJS.js"  ],
+    "tests/**/*.tsx",
+    "src/utils/cryptoJS.js"
+  ],
   "exclude": [
     "node_modules"
   ]

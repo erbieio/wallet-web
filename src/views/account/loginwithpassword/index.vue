@@ -114,6 +114,7 @@ import { useI18n } from "vue-i18n";
 import { getWallet } from "@/store/modules/account";
 import Resetpopup from "@/components/resetpopup/index.vue";
 import { useToast } from "@/plugins/toast";
+import { getQuery } from "@/utils/utils";
 export default {
   components: {
     [NavBar.name]: NavBar,
@@ -134,12 +135,11 @@ export default {
     const switchPassType = ref(false);
     const loading = ref(false);
     const form = ref();
-    // return
     const router = useRouter();
     const store = useStore();
     const route = useRoute();
     const { query } = route;
-    const { sig, clearCache, backUrl, loginParams, action } = query;
+    const { sig, clearCache, backUrl, loginParams, action } = getQuery();
     const { dispatch, commit, state } = store;
     const onClickLeft = () => {
       router.go(-1);
@@ -192,8 +192,15 @@ export default {
             if(action){
               router.replace({ name: "connect-wallet", query });
             } else {
-              // @ts-ignore
-              router.replace({ name: backUrl.toString(), query: loginParams || {} });
+              if(backUrl.indexOf('http') > -1 || backUrl.indexOf('https') > -1) {
+                let searchstr = ''
+                for(let key of loginParams) {
+                  searchstr+= `${key}=${loginParams[key]}&`
+                }
+                location.href = `${backUrl}?${searchstr}`
+              } else {
+                router.replace({ name: backUrl.toString(), query: loginParams || {} });
+              }
             }
           } else {
             router.replace({ name: "home" });
