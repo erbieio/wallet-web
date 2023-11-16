@@ -28,9 +28,9 @@
 
 
   <div class="no-list" v-show="!pageData.nftList.length && !nftErr && finished">
-    <NoData :hasText="false" />
+    <NoData  />
   </div>
-  <SliderBottom :finished="finished">
+  <!-- <SliderBottom :finished="finished">
     <div class="text-center tip1">
       {{ t("wallet.notoken", { type: "NFT" }) }}
       <span class="toCreate hover mr-4" @click="toCreate">{{
@@ -38,7 +38,7 @@
       }}</span>
       <span class="tip2 disabled">{{ t("createNft.findMore") }}</span>
     </div>
-  </SliderBottom>
+  </SliderBottom> -->
 
   <!-- error -->
   <div class="err-nft p-20" v-if="nftErr">

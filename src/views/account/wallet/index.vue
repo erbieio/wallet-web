@@ -113,7 +113,7 @@
           </div>
         </div>
       </Transition>
-      <Transition name="sliderLeft">
+      <!-- <Transition name="sliderLeft">
         <div class="btn-groups" v-if="active == 1">
           <div class="pl-20 pr-20 flex right center-v">
             <div :class="['wallet-hint pt-10 pb-10 pl-10 pr-10 mr-12']" @click="toCreate">
@@ -124,7 +124,7 @@
             </div>
           </div>
         </div>
-      </Transition>
+      </Transition> -->
 
     </div>
     <GuideModal @guideModalSuccess="guideModalSuccess" v-model="showGuideModal" />

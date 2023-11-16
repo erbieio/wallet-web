@@ -156,12 +156,12 @@
                 }}
               </div>
             </div>
-            <div class="setting-btn clickActive flex center-v" @click="toGenerate">
+            <!-- <div class="setting-btn clickActive flex center-v" @click="toGenerate">
               <van-icon name="photo-o" />
               <span>{{
                 t("castingnft.createNFT")
               }}</span>
-            </div>
+            </div> -->
 
             <div class="setting-btn clickActive flex center-v" @click="tobrowser">
               <i class="iconfont icon-network"></i>

@@ -53,13 +53,13 @@
           </div>
         </div>
       </van-cell-group>
-      <div class="btn-box mt-30">
+      <!-- <div class="btn-box mt-30">
         <div class="container flex center pl-28 pr-28">
           <van-button round block type="primary" native-type="submit">
             {{ t("sendto.next") }}
           </van-button>
         </div>
-      </div>
+      </div> -->
     </van-form>
 
     <CommonModal v-model="showGenerateModal" :title="t('generateNFT.geneateComfirm')">
