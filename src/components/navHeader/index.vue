@@ -213,10 +213,10 @@
     <dialog-warning v-if="isWarning" v-model:isWarning="isWarning" :text="dialogWarningText" :iconName="dialogWarningIconName" :color="dialogWarningColor">
     </dialog-warning>
 
-    <AffirmDialogA v-if="isAffirmDialogA" v-model:show="isAffirmDialogA"></AffirmDialogA>
+    <!-- <AffirmDialogA v-if="isAffirmDialogA" v-model:show="isAffirmDialogA"></AffirmDialogA>
     <AffirmDialogB v-if="isAffirmDialogB" v-model:show="isAffirmDialogB" v-model:isAffirmDialogC="isAffirmDialogC"></AffirmDialogB>
     <AffirmDialogC v-if="isAffirmDialogC" v-model:show="isAffirmDialogC"></AffirmDialogC>
-    <AffirmDialogD v-if="isAffirmDialogD" v-model:show="isAffirmDialogD"></AffirmDialogD>
+    <AffirmDialogD v-if="isAffirmDialogD" v-model:show="isAffirmDialogD"></AffirmDialogD> -->
   </div>
 </template>
 
@@ -248,8 +248,7 @@ import {
   Toast,
 } from "vant";
 import NetWorkCard from "../netWorkCard/index.vue";
-import { showSlider, show } from "@/components/navHeader/hooks/slider";
-import { useToggleAccount } from "@/components/accountModal/hooks/toggleAccount";
+import { show } from "@/components/navHeader/hooks/slider";
 import { useNetWork } from "@/components/navHeader/hooks/netWork";
 import { useLogin } from "@/components/navHeader/hooks/login";
 import { useExchanges } from "@/hooks/useExchanges";
@@ -266,10 +265,10 @@ import AmountView from "@/views/account/exchange/amount.vue";
 import PledgeView from "@/views/account/exchange/pledge.vue";
 // import LoadingView from "@/views/account/exchange/loading.vue";
 import success from "@/views/account/exchange/success.vue";
-import AffirmDialogA from "@/views/account/exchange/components/affirmDialogA.vue";
-import AffirmDialogB from "@/views/account/exchange/components/affirmDialogB.vue";
-import AffirmDialogC from "@/views/account/exchange/components/affirmDialogC.vue";
-import AffirmDialogD from "@/views/account/exchange/components/affirmDialogD.vue";
+// import AffirmDialogA from "@/views/account/exchange/components/affirmDialogA.vue";
+// import AffirmDialogB from "@/views/account/exchange/components/affirmDialogB.vue";
+// import AffirmDialogC from "@/views/account/exchange/components/affirmDialogC.vue";
+// import AffirmDialogD from "@/views/account/exchange/components/affirmDialogD.vue";
 
 import CreateSuccess from "@/views/account/createsuccess/index.vue";
 import { useI18n } from "vue-i18n";
@@ -280,7 +279,7 @@ import dialogWarnings from "@/components/dialogWarning/message.vue";
 import { useToast } from "@/plugins/toast";
 import { useDialog } from "@/plugins/dialog";
 import { isCommunityResourcable } from "@ethersproject/providers";
-import { VUE_APP_EXCHANGESMANAGEMENT_URL,VUE_APP_SCAN_URL,WALLET_DOC,OFFICIAL_WEBSITE } from "@/enum/env";
+import { VUE_APP_EXCHANGESMANAGEMENT_URL, VUE_APP_SCAN_URL, WALLET_DOC, OFFICIAL_WEBSITE } from "@/enum/env";
 import BigNumber from "bignumber.js";
 export default defineComponent({
   name: "NavHeader",
@@ -313,10 +312,10 @@ export default defineComponent({
     [PledgeView.name]: PledgeView,
     // [LoadingView.name]: LoadingView,
     "success-dialog": success,
-    [AffirmDialogA.name]: AffirmDialogA,
-    [AffirmDialogB.name]: AffirmDialogB,
-    [AffirmDialogC.name]: AffirmDialogC,
-    [AffirmDialogD.name]: AffirmDialogD,
+    // [AffirmDialogA.name]: AffirmDialogA,
+    // [AffirmDialogB.name]: AffirmDialogB,
+    // [AffirmDialogC.name]: AffirmDialogC,
+    // [AffirmDialogD.name]: AffirmDialogD,
     NetWorkCard,
     AccountIcon,
     AccountModal,
@@ -478,7 +477,7 @@ export default defineComponent({
       })
       show.value = false;
       const exchangeStatus = await dispatch('account/getExchangeStatus')
-      
+
       Toast.clear()
       if (exchangeStatus.ExchangerFlag) {
         router.push({
@@ -522,25 +521,25 @@ export default defineComponent({
     };
     let showPledge = ref(false);
     let isLoading = ref(false);
-    let isAffirmDialogA = ref(false);
-    let isAffirmDialogB = ref(false);
-    let isAffirmDialogC = ref(false);
-    let isAffirmDialogD = ref(false);
-    const closeExchange = async () => {
-      const wallet = await getWallet();
-      const { address } = wallet;
-      const blockNumber = await wallet.provider.getBlockNumber();
-      const accountInfo = await wallet.provider.send("eth_getAccountInfo", [
-        address,
-        "latest",
-      ]);
-      show.value = false;
-      if (blockNumber - accountInfo.Worm.BlockNumber >= (currentNetwork.value.chainId == 51888 ? 72 : 6307200)) {
-        isAffirmDialogB.value = true;
-      } else {
-        isAffirmDialogA.value = true;
-      }
-    };
+    // let isAffirmDialogA = ref(false);
+    // let isAffirmDialogB = ref(false);
+    // let isAffirmDialogC = ref(false);
+    // let isAffirmDialogD = ref(false);
+    // const closeExchange = async () => {
+    //   const wallet = await getWallet();
+    //   const { address } = wallet;
+    //   const blockNumber = await wallet.provider.getBlockNumber();
+    //   const accountInfo = await wallet.provider.send("eth_getAccountInfo", [
+    //     address,
+    //     "latest",
+    //   ]);
+    //   show.value = false;
+    //   if (blockNumber - accountInfo.Worm.BlockNumber >= (currentNetwork.value.chainId == 51888 ? 72 : 6307200)) {
+    //     isAffirmDialogB.value = true;
+    //   } else {
+    //     isAffirmDialogA.value = true;
+    //   }
+    // };
 
     const goReceive = () => {
       show.value = false;
@@ -761,11 +760,11 @@ export default defineComponent({
       minersConfirm,
       showPledge,
       isLoading,
-      isAffirmDialogA,
-      isAffirmDialogB,
-      isAffirmDialogC,
-      isAffirmDialogD,
-      closeExchange,
+      // isAffirmDialogA,
+      // isAffirmDialogB,
+      // isAffirmDialogC,
+      // isAffirmDialogD,
+      // closeExchange,
       exchangeStatus,
       sonShow,
       netStatus,

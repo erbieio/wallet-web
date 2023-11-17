@@ -13,14 +13,6 @@ export default {
         }
       },
       {
-        path: '/crossChain/trading',
-        name: 'crossChainTrading',
-        component: () => import('@/views/crossChain/trading/index.vue'),
-        meta: {
-          auth: true
-        }
-      },
-      {
         path: '/crossChain/tradingSend',
         name: 'crossChainTradingSend',
         component: () => import('@/views/crossChain/tradingSend/index.vue'),

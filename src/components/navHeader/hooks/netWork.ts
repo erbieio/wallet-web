@@ -18,13 +18,13 @@ export const useNetWork = () => {
         const { netWorkList, currentNetwork } = store.state.account
         // The network that filters out the main network
         return netWorkList.filter((item: NetWorkData) => {
-            if (item.id != 'wormholes-network-1') {
+            if (!item.isMain) {
                 return item
             }
         })
     })
     const mainNetwork = computed(() => {
-        return store.state.account.netWorkList.find((item:NetWorkData) => item.id == 'wormholes-network-1')
+        return store.state.account.netWorkList.find((item:NetWorkData) => item.isMain)
     })
     const networkLoading: Ref<boolean> = ref(false)
     // Select the network popover

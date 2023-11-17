@@ -1,12 +1,12 @@
 <template>
-    <NavHeader>
+    <NavHeader :hasRight="false">
         <template v-slot:left>
             <span class="back hover" @click="back">{{
                 t("createAccountpage.back")
             }}</span>
         </template>
         <template v-slot:title>
-            <div class="flex center title">{{ t("sidebar.crossChainTrading") }}</div>
+            <div class="flex center title">{{ headerTit }}</div>
         </template>
     </NavHeader>
     <div class="page-container">
@@ -19,9 +19,9 @@
                                 <AccountIcon :data="accountInfo.icon" />
                             </div>
                             <div class="flex column between userinformation center-h pt-4 pb-4">
-                                <div class="username mb-4">{{ accountInfo.name }}</div>
+                                <div class="username mb-4">{{ accountInfo.name }} ({{ formNetName }})</div>
                                 <div class="userbalance">
-                                    {{ chooseToken.balance }} {{ chooseToken.name }}
+                                    {{ chooseToken.balance }} {{ chooseToken.symbol }}
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                             </div>
                             <div :class="`flex column ${account.data.name ? 'between' : ''
                                 }  userinformation center-h pt-4 pb-4`">
-                                <div class="username mb-4">{{ account.data.name }}</div>
+                                <div class="username mb-4">{{ account.data.name }} ({{ toNetName }})</div>
                                 <div class="userbalance userbalanceBox">
                                     {{ account.data.address }}
                                     <!-- <i class="iconfont icon-duihao"></i> -->
@@ -96,7 +96,6 @@
                                 <div class="van-ellipsis ml-6 mr-6 token-name lh-14">
                                     {{ chooseToken.name }}
                                 </div>
-                                <van-icon name="arrow" />
                             </div>
                         </div>
                     </div>
@@ -182,11 +181,11 @@ import { getRandomIcon } from "@/utils";
 import BigNumber from "bignumber.js";
 import AccountModal from "@/components/accountModal/index.vue";
 import { useI18n } from "vue-i18n";
-import SendConfirm from "@/views/transferAccounts/components/sendComfirm.vue";
+import SendConfirm from "@/views/crossChain/components/sendConfirm.vue";
 import eventBus from "@/utils/bus";
 import { useToast } from "@/plugins/toast";
 import abi from '@/assets/json/crossChainAbi.json'
-const tokenContractAddress = '0x57937757bfed64fd3881d711068edc226e7e0ee4'
+import { ErbCorssChainContractAddr, PolygonChainContractAddr, PolygonURL } from '../config'
 
 export default {
     name: "crossChainTradingSend",
@@ -212,34 +211,71 @@ export default {
         const { commit } = store;
         const { t } = useI18n();
         const { $wtoast } = useToast();
-        const { dispatch } = store;
         const accountInfo = computed(() => store.state.account.accountInfo);
         const currentNetwork = computed(() => store.state.account.currentNetwork);
         const addressMsg = ref(t("send.addressError"));
+
+        const tokenContractAddress = currentNetwork.value.isMain ? ErbCorssChainContractAddr : PolygonChainContractAddr
         // Default token/ selected token data
         const chooseToken = computed(() => {
             const symbol = currentNetwork.value.currencySymbol;
             const balance = accountInfo.value.amount;
-            const data = {
-                balance,
-                logoUrl: "",
-                name: symbol,
-                precision: 1,
-                symbol,
-                tokenContractAddress,
-            };
-            const token = store.state.transfer.chooseToken;
-            if (token) {
-                return token;
+            if (currentNetwork.value.isMain) {
+                return {
+                    balance,
+                    logoUrl: "",
+                    name: symbol,
+                    precision: 1,
+                    symbol,
+                    tokenContractAddress
+                };
             } else {
-                return data;
+                return polygonToken
             }
+
         });
 
+        const polygonToken = reactive({
+            balance: '0.0',
+            logoUrl: "",
+            name: '',
+            precision: 1,
+            symbol: '',
+            tokenContractAddress
+        })
+
+        const getPolygonToken = async () => {
+
+            const wallet = await getWallet()
+            const contract = new ethers.Contract(
+                tokenContractAddress,
+                abi,
+                wallet.provider
+            );
+            const contractWithSigner = contract.connect(wallet);
+            const amount = await contractWithSigner.balanceOf(wallet.address)
+            const decimal = await contractWithSigner.decimals();
+            const newban = utils.formatUnits(amount.toString() || '0', decimal)
+            polygonToken.balance = newban
+            contractWithSigner.name().then(name =>  polygonToken.name = name);
+            contractWithSigner.symbol().then(symbol => polygonToken.symbol = symbol);
+            
+        }
         // Selected contact data
         const chooseContact = computed(() => store.state.transfer.chooseContact);
         const gasLimit = ref(21000);
 
+        const formNetName = computed(() => {
+            return currentNetwork.value.label
+        })
+
+        const toNetName = computed(() => {
+            return currentNetwork.value.isMain ? 'Polygon Mumb' : 'Erbie'
+        })
+
+        const headerTit = computed(() => {
+            return `${t('sidebar.crossChainTrading')} (${formNetName.value} - ${toNetName.value})`
+        })
         // amount of money
         const chooseAmount = computed(() => store.state.transfer.amount);
         const defaultAccount = toRaw(chooseContact.value || {});
@@ -274,7 +310,7 @@ export default {
             if (new BigNumber(chooseToken.value.balance).lte(amount.value)) {
                 //  $wtoast.warn(t("sendto.nomoney",{symbol:chooseToken.value.name}));
                 amountErrMsg.value = t("sendto.nomoney", {
-                    symbol: chooseToken.value.name,
+                    symbol: chooseToken.value.symbol,
                     amount: chooseToken.value.balance
                 });
                 amountErr.value = true;
@@ -362,15 +398,7 @@ export default {
         }
 
         // Listen and select token
-        watch(
-            chooseToken.value,
-            async (n) => {
-                nextTick(async () => {
-                    calcGasLimit();
-                });
-            },
-            { deep: true, immediate: true }
-        );
+
 
         // Whether the status of the address is selected
         watch(
@@ -468,6 +496,7 @@ export default {
         // Listening to account switching events
         eventBus.on("changeAccount", (e) => {
             // Clear the last selected token cache each time the account is re selected
+            getPolygonToken()
             commit("transfer/CLEAR_TX");
         });
         eventBus.on('sendComfirm', () => {
@@ -480,7 +509,7 @@ export default {
         onUnmounted(() => {
             eventBus.off('sendComfirm')
             eventBus.off('changeAccount')
-
+            commit("transfer/CLEAR_TX");
         })
         // Balance display type
         const amountType = computed(() => store.state.system.amountType);
@@ -523,18 +552,22 @@ export default {
                 wallet.provider
             );
             const contractWithSigner = contract.connect(wallet);
-            const amountWei = amount.value ? amount.value.toString() : '1'
+            const amountWei = currentNetwork.value.isMain ? '0' : amount.value ? amount.value.toString() : '0'
+            const val = currentNetwork.value.isMain ? utils.parseEther(amount.value) : utils.parseEther('0')
             contractWithSigner.estimateGas
-                .transfer(
+                .crossOut(
                     toAddress.value || accountInfo.value.address,
-                    amountWei
+                    amountWei, {
+                    value: val
+                }
                 )
                 .then((gas: any) => {
                     const limitWei = utils.formatUnits(gas, "wei")
                     gasLimit.value = parseFloat(new BigNumber(limitWei).plus(new BigNumber(limitWei).multipliedBy(0.2)).toFixed(0));
                 })
         };
-        calcGasLimit()
+
+
 
         const amountErr = ref(false);
         const handleAmountBlur = async () => {
@@ -562,6 +595,7 @@ export default {
                 amount: amount.value,
                 tokenContractAddress,
                 backUrl: "crossChainTradingSend",
+                gasLimit: gasLimit.value
             };
             router.push({
                 name: "contractTradingGasFee",
@@ -590,6 +624,18 @@ export default {
         const back = () => {
             router.back();
         };
+
+        const myBanlance = ref(accountInfo.value.amount)
+
+        onMounted(async () => {
+
+            if (!currentNetwork.value.isMain) {
+                await getPolygonToken()
+                calcGasLimit()
+            }
+
+        })
+
         return {
             back,
             gasLimitModal,
@@ -635,6 +681,9 @@ export default {
             minusDisabled,
             checkAddressError,
             toSetGas,
+            toNetName,
+            headerTit,
+            formNetName,
             amountErr,
         };
     },

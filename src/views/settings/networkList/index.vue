@@ -97,7 +97,7 @@ export default {
     
     const mainNetwork = computed(() =>{
       const { netWorkList } = store.state.account
-      return netWorkList.find((item:any) => item.id == 'wormholes-network-1')
+      return netWorkList.find((item:any) => item.isMain)
     } )
 
     const emitClose = () => {

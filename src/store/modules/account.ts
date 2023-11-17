@@ -1235,7 +1235,9 @@ export default {
           wallet.provider
       );
       const contractWithSigner = contract.connect(wallet);
+      debugger
       const data = await contractWithSigner.functions[functionName](...args)
+      debugger
       const { from, gasLimit, gasPrice, hash, nonce, type, value: newVal, to: toAddr } = data;
       const { currentNetwork } = state
       await PUSH_TXQUEUE({
@@ -1319,6 +1321,7 @@ export default {
         name = await contactObj.contractWithSigner.name();
         decimal = await contactObj.contractWithSigner.decimals();
         symbol = await contactObj.contractWithSigner.symbol();
+        debugger
       } catch (err) {
         return Promise.reject(i18n.global.t('addCurrency.errTip'))
       }

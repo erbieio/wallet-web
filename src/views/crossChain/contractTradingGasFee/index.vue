@@ -105,7 +105,8 @@
   import { useRoute, useRouter } from "vue-router";
   import { toUsd } from "@/utils/filters";
   import abi from '@/assets/json/crossChainAbi.json'
-  const tokenContractAddress = '0x57937757bfed64fd3881d711068edc226e7e0ee4'
+  // const tokenContractAddress = '0x57937757bfed64fd3881d711068edc226e7e0ee4'
+  import { ErbCorssChainContractAddr, PolygonChainContractAddr } from '../config';
 
   export default {
     name: "gass-fee-page",
@@ -135,6 +136,8 @@
       const toAddress = ref(to);
       const currentNetwork = computed(() => state.account.currentNetwork);
       const accountInfo = computed(() => state.account.accountInfo);
+      const tokenContractAddress = currentNetwork.value.isMain ? ErbCorssChainContractAddr:PolygonChainContractAddr
+
       // Estimated transaction sending time
       const second = computed(() => {
         let secondTime = 0;
@@ -193,22 +196,25 @@
       });
       // Set gaslimit dynamically
       const calcGasLimit = async () => {
-        const amountWei = web3.utils.toWei(amount.value.toString(), 'ether')
+
           // Get contract token instance object
           const wallet = await getWallet()
             // Get contract token instance object
-
+            const amountWei = currentNetwork.value.isMain ? '0' : (utils.parseEther(amount.value.toString() || '0').toString())
+        const val = currentNetwork.value.isMain ? utils.parseEther(amount.value.toString() || '0') : utils.parseEther('0')
             const contract = new ethers.Contract(
                 tokenContractAddress,
                 abi,
                 wallet.provider
             );
             const contractWithSigner = contract.connect(wallet);
-          contractWithSigner.estimateGas
-            .transfer(
-              toAddress.value || accountInfo.value.address,
-              amountWei
-            )
+            contractWithSigner.estimateGas
+                .crossOut(
+                    toAddress.value || accountInfo.value.address,
+                    amountWei,{
+                        value:val
+                    }
+                )
             .then((gas: any) => {
               const limitWei = utils.formatUnits(gas, "wei")
               gasLimit.value = parseFloat(new BigNumber(limitWei).plus(new BigNumber(limitWei).multipliedBy(0.2)).toFixed(0));

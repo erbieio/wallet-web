@@ -244,6 +244,7 @@ export default {
     const alist3 = computed(() => {
       // Split into two-dimensional arrays according to the first letter
       const list = state.account.accountList.filter(
+        
         (item: any) =>
           item.address.toUpperCase() != accountInfo.value.address.toUpperCase()
       );

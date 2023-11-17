@@ -369,7 +369,6 @@ const handleConfirm = async () => {
         }
       }
     } else {
-      ;
       const nft_address = query.address ? query.address.toString() : ""
       const sendData = {
         owner: myAddr,
