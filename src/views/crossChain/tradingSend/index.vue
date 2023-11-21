@@ -157,6 +157,7 @@ import {
     nextTick,
     onActivated,
     onMounted,
+    onDeactivated
 } from "vue";
 import {
     Icon,
@@ -186,7 +187,6 @@ import eventBus from "@/utils/bus";
 import { useToast } from "@/plugins/toast";
 import abi from '@/assets/json/crossChainAbi.json'
 import { ErbCorssChainContractAddr, PolygonChainContractAddr, PolygonURL } from '../config'
-
 export default {
     name: "crossChainTradingSend",
     components: {
@@ -509,6 +509,9 @@ export default {
         onUnmounted(() => {
             eventBus.off('sendComfirm')
             eventBus.off('changeAccount')
+            commit("transfer/CLEAR_TX");
+        })
+        onDeactivated(() => {
             commit("transfer/CLEAR_TX");
         })
         // Balance display type

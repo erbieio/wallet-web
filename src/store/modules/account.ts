@@ -1235,9 +1235,7 @@ export default {
           wallet.provider
       );
       const contractWithSigner = contract.connect(wallet);
-      debugger
       const data = await contractWithSigner.functions[functionName](...args)
-      debugger
       const { from, gasLimit, gasPrice, hash, nonce, type, value: newVal, to: toAddr } = data;
       const { currentNetwork } = state
       await PUSH_TXQUEUE({
