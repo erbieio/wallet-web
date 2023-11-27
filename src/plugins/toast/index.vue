@@ -115,7 +115,7 @@ defineExpose({
   min-width: 150px;
   max-height: 90vh;
   overflow-y: scroll;
-  background: rgba($color: #000000, $alpha: 0.8);
+  background: rgba($color: #000000, $alpha: 0.9);
   color: #fff;
   border-radius: 10px;
   .msg {

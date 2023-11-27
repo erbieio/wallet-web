@@ -21,7 +21,7 @@
                             <div class="flex column between userinformation center-h pt-4 pb-4">
                                 <div class="username mb-4">{{ accountInfo.name }} ({{ formNetName }})</div>
                                 <div class="userbalance">
-                                    {{ chooseToken.balance }} {{ chooseToken.symbol }}
+                                    {{ myBanlanceStr }}
                                 </div>
                             </div>
                         </div>
@@ -186,7 +186,7 @@ import SendConfirm from "@/views/crossChain/components/sendConfirm.vue";
 import eventBus from "@/utils/bus";
 import { useToast } from "@/plugins/toast";
 import abi from '@/assets/json/crossChainAbi.json'
-import { ErbCorssChainContractAddr, PolygonChainContractAddr, PolygonURL } from '../config'
+import { ErbCorssChainContractAddr, PolygonChainContractAddr } from '../config'
 export default {
     name: "crossChainTradingSend",
     components: {
@@ -274,7 +274,7 @@ export default {
         })
 
         const headerTit = computed(() => {
-            return `${t('sidebar.crossChainTrading')} (${formNetName.value} - ${toNetName.value})`
+            return `${t('sidebar.crossChainTrading')} (${formNetName.value} → ${toNetName.value})`
         })
         // amount of money
         const chooseAmount = computed(() => store.state.transfer.amount);
@@ -308,7 +308,6 @@ export default {
             }
             // Whether the balance is greater than the sent amount
             if (new BigNumber(chooseToken.value.balance).lte(amount.value)) {
-                //  $wtoast.warn(t("sendto.nomoney",{symbol:chooseToken.value.name}));
                 amountErrMsg.value = t("sendto.nomoney", {
                     symbol: chooseToken.value.symbol,
                     amount: chooseToken.value.balance
@@ -447,7 +446,6 @@ export default {
 
         // Use maximum
         const handleMax = () => {
-            // const v = new BigNumber(chooseToken.value.balance).toString()
             const v = chooseToken.value.balance;
             amount.value = v;
         };
@@ -556,7 +554,7 @@ export default {
             );
             const contractWithSigner = contract.connect(wallet);
             const amountWei = currentNetwork.value.isMain ? '0' : amount.value ? amount.value.toString() : '0'
-            const val = currentNetwork.value.isMain ? utils.parseEther(amount.value) : utils.parseEther('0')
+            const val = currentNetwork.value.isMain ? utils.parseEther(amount.value || '0') : utils.parseEther('0')
             contractWithSigner.estimateGas
                 .crossOut(
                     toAddress.value || accountInfo.value.address,
@@ -566,7 +564,9 @@ export default {
                 )
                 .then((gas: any) => {
                     const limitWei = utils.formatUnits(gas, "wei")
+                    console.log('limitWei', limitWei)
                     gasLimit.value = parseFloat(new BigNumber(limitWei).plus(new BigNumber(limitWei).multipliedBy(0.2)).toFixed(0));
+                    console.log('gasLimit.value', gasLimit.value)
                 })
         };
 
@@ -628,19 +628,28 @@ export default {
             router.back();
         };
 
-        const myBanlance = ref(accountInfo.value.amount)
+        const myBanlanceStr = computed(() => {
+            const mystr = `${accountInfo.value.amount} ${currentNetwork.value.currencySymbol}`
+            if(currentNetwork.value.isMain) {
+                return mystr
+            } else {
+                return `${mystr} (${chooseToken.value.balance} ${chooseToken.value.symbol})`
+            }
+        })
 
         onMounted(async () => {
-
+            calcGasLimit()
             if (!currentNetwork.value.isMain) {
                 await getPolygonToken()
-                calcGasLimit()
             }
 
         })
 
+    
+
         return {
             back,
+            myBanlanceStr,
             gasLimitModal,
             handleAmountBlur,
             gasPriceModal,
@@ -657,7 +666,6 @@ export default {
             handleShowSendConfirm,
             showSendConfirm,
             gonext,
-            // handleTokenModal,
             accountInfo,
             toAddress,
             account,

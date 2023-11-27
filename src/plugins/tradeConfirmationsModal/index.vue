@@ -248,6 +248,7 @@ defineExpose({
   bottom: 0;
   z-index: 5002;
   background: rgba($color: #000000, $alpha: 0.5);
+  transition: opacity 0.3s ease;
   .okbtn {
     min-width: 100px;
   }

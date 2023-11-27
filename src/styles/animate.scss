@@ -1,0 +1,138 @@
+.modal-enter-from {
+    opacity: 0;
+}
+
+.modal-leave-to {
+    opacity: 0;
+}
+
+.modal-container {
+    transition: all 0.3s ease;
+}
+
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
+    -webkit-transform: scale(.7);
+    transform: scale(.7);
+}
+
+
+
+.toast-container {
+    transition: all 0.3s ease;
+}
+
+
+.toast-enter-active .toast-container {
+    opacity: 1;
+}
+
+.toast-enter-from .toast-container {
+    opacity: 0;
+}
+
+.toast-leave-to .toast-container {
+    opacity: 0;
+}
+
+.toast-enter-from .toast-container,
+.toast-leave-to .toast-container {
+    -webkit-transform: scale(.7);
+    transform: scale(.7);
+}
+
+
+
+
+// .sliderLeft-enter-active {
+//     animation: slider-left 0.3s ease-in-out;
+// }
+
+// .sliderLeft-leave-active {
+//     animation: slider-left 0.3s reverse ease-in-out;
+// }
+
+// @keyframes slider-left {
+//     0% {
+//         transform: translateX(30px);
+//         opacity: 0;
+//     }
+
+//     100% {
+//         transform: translateX(0);
+//         opacity: 1;
+//     }
+// }
+
+
+// .sliderRight-enter-active {
+//     animation: slider-right 0.3s ease-in-out;
+// }
+
+// .sliderRight-leave-active {
+//     animation: slider-right 0.3s reverse ease-in-out;
+// }
+
+// @keyframes slider-right {
+//     0% {
+//         right: -100%;
+//         opacity: 0;
+//     }
+
+//     100% {
+//         right: 20px;
+//         opacity: 1;
+//     }
+// }
+
+
+
+// .slider-enter-active {
+//     animation: slider-in 0.3s ease-in-out;
+// }
+
+// .slider-leave-active {
+//     animation: slider-in 0.3s reverse ease-in-out;
+// }
+
+// @keyframes slider-in {
+//     0% {
+//         transform: translateY(90px);
+//         opacity: 1;
+//     }
+
+//     100% {
+//         transform: translateY(0);
+//         opacity: 0;
+//     }
+// }
+
+
+// .fade-enter-active {
+//     animation: fade-in 0.3s ease-in-out;
+// }
+// .fade-leave-active {
+//     animation: fade-out 0.3s ease-in-out;
+// }
+// @keyframes fade-in {
+//     0% {
+//         opacity: 0;
+//         display: none;
+//     }
+
+//     100% {
+//         opacity: 1;
+//         display: block;
+//     }
+// }
+// @keyframes fade-out {
+//     0% {
+//         opacity: 1;
+//         display: block;
+//     }
+
+//     100% {
+//         opacity: 0;
+//         display: none;
+//     }
+// }

@@ -179,7 +179,7 @@
         let txData: any = null
         nextLoading.value = true;
         $tradeConfirm.open({
-          disabled: [TradeStatus.pendding],
+          disabled: [TradeStatus.approve],
         });
         console.log('data', props.data)
         // ErbCorssChainContractAddr

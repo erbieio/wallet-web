@@ -102,25 +102,25 @@ export default {
       dispatch("account/getContractAddress");
       dispatch("configuration/getConfiguration");
     
-      (async function () {
-        const vuex = localStorage.getItem("vuex");
-        const mnemonic = localStorage.getItem("mnemonic");
-        const hasMove = localStorage.getItem("hasMove");
-        if (!hasMove && vuex && mnemonic) {
-          router.replace({ name: "guidance" });
-        }
-      })();
+      // (async function () {
+      //   const vuex = localStorage.getItem("vuex");
+      //   const mnemonic = localStorage.getItem("mnemonic");
+      //   const hasMove = localStorage.getItem("hasMove");
+      //   if (!hasMove && vuex && mnemonic) {
+      //     router.replace({ name: "guidance" });
+      //   }
+      // })();
 
-      // move mnemonic to indexDB
-      (function () {
-        let time = setTimeout(async () => {
-          const mnemonic = await localforage.getItem("mnemonic");
-          if (!state.mnemonic.keyStore && mnemonic) {
-            commit("mnemonic/UPDATE_MNEMONIC", mnemonic);
-          }
-          clearTimeout(time);
-        }, 5000);
-      })();
+      // // move mnemonic to indexDB
+      // (function () {
+      //   let time = setTimeout(async () => {
+      //     const mnemonic = await localforage.getItem("mnemonic");
+      //     if (!state.mnemonic.keyStore && mnemonic) {
+      //       commit("mnemonic/UPDATE_MNEMONIC", mnemonic);
+      //     }
+      //     clearTimeout(time);
+      //   }, 5000);
+      // })();
     });
     return {
       t,

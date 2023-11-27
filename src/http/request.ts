@@ -37,7 +37,7 @@ service.interceptors.response.use(
  * @param {params} Request parameters
  * @param {options} Request configuration for the current request；
  */
- export function request(url: string,params: any,method: Method, headers:Headers){
+ export function request(url: string,params: any,method: Method, headers: Headers){
     let data = {}
         // Get request uses params field
         if(method =='get')data = {params}
