@@ -344,7 +344,7 @@ router.beforeEach(async (to, form, next) => {
   const hasAccountFlag = await hasAccount()
   const authFlag = authentication()
   const query = getQuery()
-  if (!auth && (name == 'termsOfUse' || name == 'privacyNotice' || name == 'inputpage')) {
+  if (!auth && name == 'inputpage') {
     next()
     return
   }
